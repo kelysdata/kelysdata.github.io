@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kelys Alvarez Torres | Data Analytics Portfolio</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f4f6fa;
+      color: #18263d;
+      font: 1rem/1.6 system-ui, sans-serif;
+    }
+    main { max-width: 72rem; margin: auto; padding: 2rem 1.25rem 4rem; }
+    header { padding: 3rem 0; }
+    header p { max-width: 40rem; }
+    h1 { margin: 0; font-size: clamp(2.5rem, 7vw, 4.75rem); line-height: 1.1; }
+    h2, h3 { line-height: 1.25; }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+      gap: 1rem;
+    }
+    article {
+      background: #fff;
+      border: 1px solid #d6dfeb;
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+    article h3 { margin-top: 0; }
+    a { color: #174da1; font-weight: 650; text-underline-offset: .2em; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p>Data Analytics Portfolio</p>
+      <h1>Kelys Alvarez Torres</h1>
+      <p>I'm a data analytics student at Western Governors University.
+        I use SQL, Excel, and Power BI to explore questions about
+        operations, sales, and customer experience.</p>
+      <a href="https://github.com/kelysdata">View my GitHub profile</a>
+    </header>
+
+    <section aria-labelledby="projects">
+      <h2 id="projects">Featured Projects</h2>
+      <div class="projects">
+        <article>
+          <h3><a href="https://github.com/kelysdata/dfw-flight-delays-2025">
+            DFW Flight Delays 2025</a></h3>
+          <p>Analysis of flight delays and cancellations at DFW using SQL and Power BI.</p>
+        </article>
+        <article>
+          <h3><a href="https://github.com/kelysdata/it-service-desk-dashboard">
+            IT Service Desk Dashboard</a></h3>
+          <p>Power BI dashboard exploring ticket priorities, resolution times, and customer satisfaction.</p>
+        </article>
+        <article>
+          <h3><a href="https://github.com/kelysdata/superstore-sales-dashboard">
+            Superstore Sales Dashboard</a></h3>
+          <p>Power BI dashboard exploring sales, profit, customer segments, and regional trends.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
