@@ -3,101 +3,263 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Data analytics portfolio of Kelys Alvarez Torres, featuring SQL and Power BI projects.">
+  <meta name="theme-color" content="#f6f7fb">
   <title>Kelys Alvarez Torres | Data Analytics Portfolio</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: #f4f6fa;
-      color: #18263d;
-      font: 1rem/1.6 system-ui, sans-serif;
+    :root {
+      color-scheme: light;
+      --ink: #142545;
+      --muted: #475773;
+      --line: #ccd5e4;
+      --paper: #f6f7fb;
+      --blue: #244e99;
+      --white: #fff;
     }
-    main { max-width: 72rem; margin: auto; padding: 2rem 1.25rem 4rem; }
-    header { padding: 3rem 0; }
-    header p { max-width: 40rem; }
-    h1 { margin: 0; font-size: clamp(2.5rem, 7vw, 4.75rem); line-height: 1.1; }
-    h2, h3 { line-height: 1.25; }
-    .projects {
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.65 system-ui, sans-serif; }
+    [hidden] { display: none !important; }
+    a { color: var(--blue); text-underline-offset: .22em; }
+    a:focus-visible { outline: 3px solid #915317; outline-offset: 5px; }
+    .wrap { width: min(76rem, calc(100% - 3rem)); margin-inline: auto; }
+    .bar, .foot { background: var(--white); }
+    .bar { border-bottom: 1px solid var(--line); }
+    .bar .wrap, .foot .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; }
+    .bar .wrap { padding-block: 1.1rem; }
+    .brand { color: var(--ink); font-weight: 720; text-decoration: none; }
+    nav { display: flex; flex-wrap: wrap; gap: .25rem; }
+    nav a { padding: .42rem .75rem; border-radius: .3rem; color: var(--muted); font-size: .95rem; font-weight: 650; text-decoration: none; }
+    nav a:hover, nav a[aria-current="page"] { background: #e7edf8; color: var(--blue); }
+    main { min-height: 69vh; }
+    .view { padding-block: clamp(3.2rem, 8vw, 7rem); }
+    .home { display: grid; grid-template-columns: minmax(13rem, .75fr) minmax(0, 1.35fr); gap: clamp(2rem, 7vw, 7rem); align-items: center; }
+    .portrait {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-      gap: 1rem;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 18rem;
+      aspect-ratio: 1 / 1.03;
+      max-width: 27rem;
+      border: 1px solid #315487;
+      border-radius: 1rem 4.5rem 1rem 1rem;
+      background:
+        radial-gradient(circle at 86% 14%, #5277ac 0%, transparent 56%),
+        repeating-linear-gradient(0deg, transparent 0 31px, #ffffff1c 32px),
+        repeating-linear-gradient(90deg, #172f59 0 31px, #45628e 32px);
+      color: #fff;
     }
-    article {
-      background: #fff;
-      border: 1px solid #d6dfeb;
-      border-radius: 1rem;
-      padding: 1.25rem;
+    .portrait span { font: 400 clamp(4.5rem, 9vw, 8.5rem)/1 Georgia, serif; letter-spacing: -.08em; padding-right: .08em; }
+    .portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .role { color: var(--blue); font-size: .93rem; font-weight: 750; margin: 0 0 1rem; }
+    h1, h2, h3 { line-height: 1.12; }
+    h1 { font: 400 clamp(2.75rem, 6vw, 5.7rem)/1.03 Georgia, serif; letter-spacing: -.045em; margin: 0 0 1.25rem; }
+    h2 { font: 400 clamp(2.6rem, 5vw, 4.1rem)/1.03 Georgia, serif; letter-spacing: -.04em; margin: 0 0 1.15rem; }
+    h3 { margin: 0 0 .8rem; }
+    p { margin: 0 0 1rem; }
+    .copy { max-width: 38rem; color: var(--muted); }
+    .actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.55rem; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.85rem;
+      padding: .55rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: .35rem;
+      background: var(--white);
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
     }
-    article h3 { margin-top: 0; }
-    a { color: #174da1; font-weight: 650; text-underline-offset: .2em; }
+    .button.primary { color: var(--white); background: var(--blue); border-color: var(--blue); }
+    .button:hover { border-color: var(--blue); }
+    .projects { margin-top: 2rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .card, .panel { background: var(--white); border: 1px solid var(--line); border-radius: .75rem; padding: clamp(1.15rem, 2.3vw, 2rem); }
+    .card { display: flex; flex-direction: column; align-items: flex-start; }
+    .card > a:last-child { margin-top: auto; font-weight: 700; }
+    .preview { display: block; width: 100%; margin: .2rem 0 1rem; border: 1px solid var(--line); border-radius: .4rem; background: var(--paper); overflow: hidden; }
+    .preview img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; }
+    .panel { max-width: 46rem; }
+    .panel p:last-child { margin-bottom: 0; }
+    .panel h3:not(:first-child) { margin-top: 1.5rem; }
+    .foot { border-top: 1px solid var(--line); color: var(--muted); }
+    .foot .wrap { padding-block: 1rem; }
+    .resume-preview {
+      display: block;
+      width: 100%;
+      height: clamp(28rem, 78vh, 65rem);
+      margin-top: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: var(--white);
+    }
+    @media (max-width: 55rem) {
+      .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 39rem) {
+      .wrap { width: calc(100% - 2rem); }
+      .home, .projects { grid-template-columns: 1fr; }
+      .portrait { width: min(65%, 17rem); min-height: 0; }
+      .bar .wrap { gap: .5rem; }
+      .bar nav { margin-left: -.75rem; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <p>Data Analytics Portfolio</p>
-      <h1>Kelys Alvarez Torres</h1>
-      <p>I'm a data analytics student at Western Governors University.
-        I use SQL, Excel, and Power BI to explore questions about
-        operations, sales, and customer experience.</p>
-      <a href="https://github.com/kelysdata">View my GitHub profile</a>
-    </header>
-    <section aria-labelledby="projects">
-      <h2 id="projects">Featured Projects</h2>
+  <header class="bar">
+    <div class="wrap">
+      <a class="brand" href="#home">Kelys Alvarez Torres</a>
+      <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#resume">Résumé</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="view home" id="home" aria-labelledby="home-title">
+      <div class="portrait">
+        <span aria-hidden="true">KA</span>
+        <!-- Add your own portrait here, above the initials, once selected. -->
+      </div>
+      <div>
+        <p class="role">Data Analytics · SQL, Excel &amp; Power BI</p>
+        <h1 id="home-title" tabindex="-1">Hi, I’m Kelys.</h1>
+        <p class="copy">I started my career in law and public administration in Cuba. I reviewed official records for accuracy and compliance in civil registration, then worked as an attorney, where I reviewed case files, weighed evidence, and explained what it meant for the people involved. Both roles taught me how much a decision depends on the quality of the information behind it.</p>
+        <p class="copy">That experience shapes the way I approach data analytics today. I’m pursuing a B.S. in Data Analytics at Western Governors University and use SQL, Excel, and Power BI to investigate practical questions. In my projects, I’ve examined how often flights leave DFW late, which support tickets take the longest to resolve, and why product categories with similar sales can deliver very different profits.</p>
+        <p class="copy">What I enjoy most is turning those findings into something people can use. I start with a question, check how the data was collected and what it can support, and explain the result in plain language.</p>
+      </div>
+    </section>
+
+    <section class="view" id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title" tabindex="-1">Projects</h2>
       <div class="projects">
-        <article>
-  <h3>DFW Flight Delays 2025</h3>
-  <a href="https://github.com/kelysdata/dfw-flight-delays-2025/blob/main/dashboard.png"
-     aria-label="Open the full-size DFW Flight Delays dashboard">
-    <img
-      src="https://raw.githubusercontent.com/kelysdata/dfw-flight-delays-2025/main/dashboard.png"
-      alt="Power BI dashboard showing monthly flight delays, cancellations, and the destinations with the highest departure delay rates."
-      style="display: block; width: 100%; height: auto; border-radius: 8px;">
-  </a>
-  <p>Using SQL and Power BI, I analyzed 315,854 flights scheduled to depart from DFW in 2025.</p>
-  <p><strong>28.58% of non-canceled departures</strong> were delayed by at least 15 minutes.</p>
-  <a href="https://github.com/kelysdata/dfw-flight-delays-2025">
-    View project on GitHub
-  </a>
-</article>
-        <article>
-  <h3>IT Service Desk Dashboard</h3>
+        <article class="card">
+          <h3>DFW Flight Delays 2025</h3>
+          <a class="preview" href="https://github.com/kelysdata/dfw-flight-delays-2025/blob/main/dashboard.png" aria-label="Open the full-size DFW Flight Delays dashboard">
+            <img src="https://raw.githubusercontent.com/kelysdata/dfw-flight-delays-2025/main/dashboard.png" alt="Power BI dashboard showing monthly flight delays, cancellations, and the destinations with the highest departure delay rates.">
+          </a>
+          <p>Using SQL and Power BI, I analyzed 315,854 flights scheduled to depart from DFW in 2025.</p>
+          <p><strong>28.58% of non-canceled departures</strong> were delayed by at least 15 minutes.</p>
+          <a href="https://github.com/kelysdata/dfw-flight-delays-2025">View project on GitHub</a>
+        </article>
+        <article class="card">
+          <h3>IT Service Desk Dashboard</h3>
+          <a class="preview" href="https://raw.githubusercontent.com/kelysdata/it-service-desk-dashboard/HEAD/IT_Service_Desk_Dashboard.png" aria-label="Open the full-size IT Service Desk dashboard">
+            <img src="https://raw.githubusercontent.com/kelysdata/it-service-desk-dashboard/HEAD/IT_Service_Desk_Dashboard.png" alt="Power BI dashboard showing ticket volume, status, and average resolution time by category.">
+          </a>
+          <p>I built a Power BI dashboard to track resolution times, ticket status, and user satisfaction across 100 IT support tickets.</p>
+          <p><strong>Access and login tickets took the longest to resolve</strong>, averaging 12 hours compared with 6.5 hours overall.</p>
+          <a href="https://github.com/kelysdata/it-service-desk-dashboard">View project on GitHub</a>
+        </article>
+        <article class="card">
+          <h3>Superstore Sales Dashboard</h3>
+          <a class="preview" href="https://raw.githubusercontent.com/kelysdata/superstore-sales-dashboard/HEAD/Superstore_Sales_Dashboard_Portafolio.png" aria-label="Open the full-size Superstore Sales dashboard">
+            <img src="https://raw.githubusercontent.com/kelysdata/superstore-sales-dashboard/HEAD/Superstore_Sales_Dashboard_Portafolio.png" alt="Power BI dashboard showing Superstore sales by category, region, and customer segment, plus profit by category.">
+          </a>
+          <p>I built a Power BI dashboard to analyze $2.30 million in sales across product categories, regions, and customer segments.</p>
+          <p><strong>Technology and Furniture had similar sales</strong>, but Technology generated about $145,000 in profit compared with about $18,000 for Furniture.</p>
+          <a href="https://github.com/kelysdata/superstore-sales-dashboard">View project on GitHub</a>
+        </article>
+      </div>
+    </section>
 
-  <a href="https://raw.githubusercontent.com/kelysdata/it-service-desk-dashboard/HEAD/IT_Service_Desk_Dashboard.png"
-     aria-label="Open the full-size IT Service Desk dashboard">
-    <img
-      src="https://raw.githubusercontent.com/kelysdata/it-service-desk-dashboard/HEAD/IT_Service_Desk_Dashboard.png"
-      alt="Power BI dashboard showing ticket volume, status, and average resolution time by category."
-      style="display: block; width: 100%; height: auto; border-radius: 8px;">
-  </a>
+    <section class="view" id="resume" aria-labelledby="resume-title">
+      <h2 id="resume-title" tabindex="-1">Résumé</h2>
+      <p id="resume-status" role="status">Loading résumé…</p>
+      <div id="resume-actions" class="actions" hidden>
+        <a class="button primary" href="resume.pdf" download>Download PDF</a>
+        <a class="button" href="resume.pdf" target="_blank" rel="noopener">Open PDF</a>
+      </div>
+      <iframe
+        id="resume-preview"
+        class="resume-preview"
+        title="Résumé of Kelys Alvarez Torres"
+        hidden>
+      </iframe>
+      <noscript><p><a href="resume.pdf">Open résumé PDF</a></p></noscript>
+    </section>
 
-  <p>I built a Power BI dashboard to track resolution times, ticket status, and user satisfaction across 100 IT support tickets.</p>
-  <p><strong>Access and login tickets took the longest to resolve</strong>, averaging 12 hours compared with 6.5 hours overall.</p>
-
-  <a href="https://github.com/kelysdata/it-service-desk-dashboard">
-    View project on GitHub
-  </a>
-</article>
-        <article>
-  <h3>Superstore Sales Dashboard</h3>
-
-  <a href="https://raw.githubusercontent.com/kelysdata/superstore-sales-dashboard/HEAD/Superstore_Sales_Dashboard_Portafolio.png"
-     aria-label="Open the full-size Superstore Sales dashboard">
-    <img
-      src="https://raw.githubusercontent.com/kelysdata/superstore-sales-dashboard/HEAD/Superstore_Sales_Dashboard_Portafolio.png"
-      alt="Power BI dashboard showing Superstore sales by category, region, and customer segment, plus profit by category."
-      style="display: block; width: 100%; height: auto; border-radius: 8px;">
-  </a>
-
-  <p>I built a Power BI dashboard to analyze $2.30 million in sales across product categories, regions, and customer segments.</p>
-  <p><strong>Technology and Furniture had similar sales</strong>, but Technology generated about $145,000 in profit compared with about $18,000 for Furniture.</p>
-
-  <a href="https://github.com/kelysdata/superstore-sales-dashboard">
-    View project on GitHub
-  </a>
-</article>
+    <section class="view" id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title" tabindex="-1">Contact</h2>
+      <div class="panel">
+        <p>For questions about my projects or opportunities in data analytics, you can send me a message on LinkedIn.</p>
+        <a class="button primary" href="https://www.linkedin.com/in/kelysalvarez/">Find me on LinkedIn</a>
       </div>
     </section>
   </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span>Kelys Alvarez Torres</span>
+
+    </div>
+  </footer>
+
+  <script>
+    const views = [...document.querySelectorAll('main > section')];
+    const links = [...document.querySelectorAll('nav a')];
+
+    let resumeRequested = false;
+
+    async function loadResume() {
+      if (resumeRequested) return;
+      resumeRequested = true;
+
+      const status = document.querySelector('#resume-status');
+      const actions = document.querySelector('#resume-actions');
+      const preview = document.querySelector('#resume-preview');
+      const url = actions.querySelector('a').href;
+
+      try {
+        if (window.location.protocol !== 'file:') {
+          const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+          if (!response.ok) throw new Error('Résumé PDF unavailable');
+        }
+
+        actions.hidden = false;
+        status.hidden = true;
+        if (navigator.pdfViewerEnabled !== false) {
+          preview.src = url;
+          preview.hidden = false;
+        }
+      } catch {
+        status.textContent = 'The résumé PDF is currently unavailable.';
+        resumeRequested = false;
+      }
+    }
+
+    function showView(focusHeading) {
+      const hash = window.location.hash.slice(1);
+      const view = views.find(section => section.id === hash) ?? views[0];
+
+      for (const section of views) {
+        section.hidden = section !== view;
+      }
+      for (const link of links) {
+        if (link.hash === '#' + view.id) {
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      }
+
+      if (view.id === 'resume') void loadResume();
+
+      const heading = view.querySelector('h1, h2');
+      document.title = view.id === 'home'
+        ? 'Kelys Alvarez Torres | Data Analytics Portfolio'
+        : heading.textContent + ' | Kelys Alvarez Torres';
+      if (focusHeading) {
+        heading.focus({ preventScroll: true });
+        window.scrollTo(0, 0);
+      }
+    }
+
+    showView(false);
+    window.addEventListener('hashchange', () => showView(true));
+  </script>
 </body>
 </html>
