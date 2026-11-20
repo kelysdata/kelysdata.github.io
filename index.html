@@ -84,14 +84,15 @@
     .panel h3:not(:first-child) { margin-top: 1.5rem; }
     .foot { border-top: 1px solid var(--line); color: var(--muted); }
     .foot .wrap { padding-block: 1rem; }
-    .resume-preview {
+    #resume { max-width: 52rem; margin-inline: auto; }
+    .resume-preview { margin-top: 1.5rem; }
+    .resume-sheet {
       display: block;
       width: 100%;
-      height: clamp(28rem, 78vh, 65rem);
-      margin-top: 1.5rem;
-      border: 1px solid var(--line);
-      border-radius: .5rem;
+      height: auto;
+      margin-bottom: 1.25rem;
       background: var(--white);
+      box-shadow: 0 1px 5px #14254526;
     }
     @media (max-width: 55rem) {
       .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -170,15 +171,9 @@
       <h2 id="resume-title" tabindex="-1">Résumé</h2>
       <p id="resume-status" role="status">Loading résumé…</p>
       <div id="resume-actions" class="actions" hidden>
-        <a class="button primary" href="resume.pdf" download>Download PDF</a>
-        <a class="button" href="resume.pdf" target="_blank" rel="noopener">Open PDF</a>
+        <a class="button primary" href="resume.pdf" target="_blank" rel="noopener">Open PDF</a>
       </div>
-      <iframe
-        id="resume-preview"
-        class="resume-preview"
-        title="Résumé of Kelys Alvarez Torres"
-        hidden>
-      </iframe>
+      <div id="resume-preview" class="resume-preview" hidden></div>
       <noscript><p><a href="resume.pdf">Open résumé PDF</a></p></noscript>
     </section>
 
@@ -214,19 +209,39 @@
       const url = actions.querySelector('a').href;
 
       try {
-        if (window.location.protocol !== 'file:') {
-          const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
-          if (!response.ok) throw new Error('Résumé PDF unavailable');
-        }
-
+        const response = await fetch(url, { cache: 'no-cache' });
+        if (!response.ok) throw new Error('Résumé PDF unavailable');
         actions.hidden = false;
-        status.hidden = true;
-        if (navigator.pdfViewerEnabled !== false) {
-          preview.src = url;
+
+        const moduleBase = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/';
+        const pdfjs = await import(moduleBase + 'pdf.mjs');
+        pdfjs.GlobalWorkerOptions.workerSrc = moduleBase + 'pdf.worker.mjs';
+        const pdf = await pdfjs.getDocument({ data: await response.arrayBuffer(), isEvalSupported: false }).promise;
+
+        try {
+          const sheets = document.createDocumentFragment();
+          for (let number = 1; number <= pdf.numPages; number++) {
+            const page = await pdf.getPage(number);
+            const viewport = page.getViewport({ scale: 2.5 });
+            const canvas = document.createElement('canvas');
+            canvas.className = 'resume-sheet';
+            canvas.width = Math.ceil(viewport.width);
+            canvas.height = Math.ceil(viewport.height);
+            canvas.setAttribute('role', 'img');
+            canvas.setAttribute('aria-label', 'Résumé, page ' + number + ' of ' + pdf.numPages);
+            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+            sheets.append(canvas);
+          }
+          preview.replaceChildren(sheets);
           preview.hidden = false;
+          status.hidden = true;
+        } finally {
+          await pdf.destroy();
         }
       } catch {
-        status.textContent = 'The résumé PDF is currently unavailable.';
+        status.textContent = actions.hidden
+          ? 'The résumé PDF is currently unavailable.'
+          : 'The preview is unavailable. You can still open the résumé PDF.';
         resumeRequested = false;
       }
     }
